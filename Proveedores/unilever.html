@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Walmart Connect – Consolidados 2026</title>
+<link rel="icon" type="image/png" href="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png">
+
+<style>
+:root {
+  --primary: #0b2a6f;
+  --bg: #d1d5db;
+  --panel: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --btn: #2563eb;
+  --btn-disabled: #9ca3af;
+  --locales-bg: #eef2ff;
+}
+* { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+header { background: var(--primary); color: white; padding: 16px; text-align: center; font-weight: 600; }
+
+.wrapper { max-width: 760px; margin: 20px auto; padding: 0 14px; }
+
+.provider-bar {
+  background: white; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.provider-name { font-weight: 700; }
+.provider-date { font-size: 12px; color: var(--muted); }
+
+.filtro-bar {
+  background: white;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+}
+
+.filtro-bar select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.card {
+  background: var(--panel);
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.18);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.grid-main { display: grid; grid-template-columns: 1fr 1fr; }
+
+.cell {
+  min-width: 0;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.grid-main > .cell:nth-child(odd) { border-right: 1px solid var(--border); }
+.grid-main > .cell:nth-last-child(-n + 2) { border-bottom: none; }
+
+.label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.value { font-weight: 600; }
+
+.preview-img {
+  width: 100%;
+  max-height: 90px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  border-radius: 8px;
+}
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  background: var(--btn);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.btn.disabled {
+  background: var(--btn-disabled);
+  cursor: not-allowed;
+}
+
+.locales-row {
+  border-top: 1px solid var(--border);
+  padding: 14px;
+}
+
+.locales-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--locales-bg);
+  color: var(--primary);
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1000;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-height: 85vh;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.modal-body input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.locales-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.locales-list li {
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-bar {
+  background: var(--primary);
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo-header {
+  height: 26px;
+  object-fit: contain;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+  z-index: 2000;
+  opacity: .85;
+  transition: opacity .2s ease, transform .2s ease;
+  animation: bounce 1.6s infinite;
+}
+
+.scroll-indicator:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.close { font-size: 22px; cursor: pointer; }
+
+@media (min-width: 769px) {
+  .modal { align-items: center; }
+  .modal-content { width: 520px; border-radius: 16px; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+</head>
+
+<body>
+
+<header class="header-bar">
+  <img src="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png" class="logo-header" alt="Connect">
+  <span>Walmart Connect · Consolidado</span>
+</header>
+
+
+
+<div class="wrapper">
+
+  <div class="provider-bar">
+    <div class="provider-name" id="providerName">Proveedor</div>
+    <div class="provider-date" id="providerVigencia">Vigencia</div>
+  </div>
+
+  <div class="filtro-bar">
+    <select id="filtroGlobal"></select>
+  </div>
+
+  <div id="cardsRoot"></div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modalLocales">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>Locales asociados</span>
+      <span class="close" id="btnCloseModal">×</span>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="inputBuscar" placeholder="Buscar local..." />
+      <ul class="locales-list" id="listaLocales"></ul>
+    </div>
+  </div>
+</div>
+
+<div id="scrollIndicator" class="scroll-indicator">↓</div>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script>
+const __PROVIDER__       = {"proveedor": "Unilever", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)"};
+const elementos          = [{"nombre": "CUBRE PALLETS", "medidas": "MÁXIMO: 470x80 cm.", "piezas": 1, "categoria": "DETERGENTES", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/EcIL8gwcr8Kg-Cubre-Pallet-3-Omo.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/hUAPLdBvrfs5-Cubre-Pallet-3-Omo.jpg", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "244", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "910", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "CUBRE BINS", "medidas": "MÁXIMO: A 110x40, B 90x40 cm.", "piezas": 1, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/JJP6MHSAU97W-Cubrepallet.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/Ns1tPCd8fpZB-Cubrepallet.png", "locales": ["3", "33", "35", "37", "39", "44", "46", "48", "49", "57", "58", "62", "66", "71", "72", "73", "75", "76", "78", "81", "83", "84", "87", "91", "92", "93", "95", "96", "97", "98", "99", "120", "121", "122", "137", "425", "456", "457", "459", "518", "602", "606", "608", "616", "618", "620", "626", "628", "631", "635", "654", "655", "670", "671", "697", "739", "798", "910", "929", "945", "952", "978", "983", "985", "988"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/XxKjICpWMoan-MiniCabecera.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/fOZWufwIed1W-MiniCabecera.png", "locales": ["40", "43", "51", "52", "60", "65", "74", "129", "139", "146", "149", "165", "166", "174", "177", "180", "183", "188", "189", "196", "252", "253", "514", "516", "525", "603", "605", "611", "612", "621", "624", "625", "647", "650", "658", "677"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "DETERGENTES", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/XsiKoIUcjELB-Cabeceras-Omo.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/3sXVGZhekeB5-Cabeceras-Omo.jpg", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "244", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "910", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "DETERGENTES", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/bion8LkUXJkv-Revestimiento-Cabecera.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/z6nhV9uBgVOY-Revestimiento-Cabecera.jpg", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "244", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "910", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "CUBRE BINS", "medidas": "MÁXIMO: A 110x40, B 90x40 cm.", "piezas": 4, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/sOoOhEs92peD-Cubrepallet.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/m7yhR0qonbcM-Cubrepallet.png", "locales": ["3", "33", "35", "37", "39", "44", "46", "48", "49", "57", "58", "62", "66", "71", "72", "73", "75", "76", "78", "81", "83", "84", "87", "91", "92", "93", "95", "96", "97", "98", "99", "120", "121", "122", "137", "425", "456", "457", "459", "518", "602", "606", "608", "616", "618", "620", "626", "628", "631", "635", "654", "655", "670", "671", "697", "739", "798", "910", "929", "945", "952", "978", "983", "985", "988"]}, {"nombre": "CUBRE ALARMA", "medidas": "MÁXIMO: 50x120 cm.", "piezas": 4, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/4w1Er9IsrPfD-Alarmas-KV.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/BPjFPYOcryX5-Alarmas-KV.png", "locales": ["3", "32", "33", "35", "41", "48", "49", "55", "57", "58", "72", "73", "75", "76", "78", "81", "83", "84", "85", "89", "91", "92", "94", "95", "97", "98", "99", "120", "425", "608", "628", "655", "682"]}, {"nombre": "FRONTAL CARROS", "medidas": "MÁXIMO: 27x34 cm.", "piezas": 20, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/9aVMt2iEpu8p-paracarro.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/nHS4Rf5p34kK-paracarro.png", "locales": ["32", "33", "35", "41", "48", "49", "58", "72", "73", "75", "78", "81", "83", "89", "91", "92", "94", "95", "99", "655"]}, {"nombre": "SEPARADOR XL", "medidas": "MÁXIMO: 15x40 cm.", "piezas": 2, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/hennvR3M35xG-KVStopper-Foto-montaje.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/ENJ15GdJnxZE-Alarmas-KV.png", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "SEPARADOR", "medidas": "MÁXIMO: 12x20 cm.", "piezas": 2, "categoria": "JABON", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/ZoCnZCrzj1zS-Separador-Diva.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/HzXpXsmyTKuI-Separador-Diva.png", "locales": ["3", "32", "33", "35", "41", "48", "55", "57", "58", "72", "75", "78", "83", "89", "91", "92", "95", "97", "98", "628"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "DETERGENTES", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/Wf4wYdaXM7xw-Mini-cabeceras-Quix.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/sUigTvZFHlag-Mini-cabeceras-Quix.jpg", "locales": ["32", "33", "35", "36", "38", "39", "41", "42", "44", "45", "46", "48", "49", "55", "57", "58", "62", "71", "72", "73", "75", "76", "78", "79", "81", "83", "84", "85", "88", "89", "91", "92", "94", "95", "96", "97", "98", "99", "120", "126", "127", "182", "425", "426", "456", "457", "459", "518", "602", "607", "618", "620", "626", "632", "654", "655", "670", "679", "682", "684", "686", "697", "736", "747", "988"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "LIMPIADORES - HOGAR", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/OcwenNsnAqKu-Minicabecera-de-CIF.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/GhV8MiMcqSsU-Minicabecera-de-CIF.jpg", "locales": ["32", "33", "35", "36", "38", "39", "41", "42", "44", "45", "46", "48", "49", "55", "57", "58", "62", "71", "72", "73", "75", "76", "78", "79", "81", "83", "84", "85", "88", "89", "91", "92", "94", "95", "96", "97", "98", "99", "120", "126", "127", "182", "425", "426", "456", "457", "459", "518", "602", "607", "618", "620", "626", "632", "654", "655", "670", "679", "682", "684", "686", "697", "736", "747", "988"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "SUAVIZANTES", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/la3DFmr8FkAZ-Mini-cabeceras-Comfort.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/nkKwyUvIhkKp-Mini-cabeceras-Comfort.jpg", "locales": ["32", "33", "35", "36", "38", "39", "41", "42", "44", "45", "46", "48", "49", "55", "57", "58", "62", "71", "72", "73", "75", "76", "78", "79", "81", "83", "84", "85", "88", "89", "91", "92", "94", "95", "96", "97", "98", "99", "120", "126", "127", "182", "425", "426", "456", "457", "459", "518", "602", "607", "618", "620", "626", "632", "654", "655", "670", "679", "682", "684", "686", "697", "736", "747", "988"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/Dk6NBoVK7WtH-MiniCabecera-ABD.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/usUR8LPfsHbm-MiniCabecera-ABD.png", "locales": ["39", "48", "55", "57", "71", "79", "83", "85", "88", "89", "92", "95", "97", "98", "120", "126", "127", "182", "426", "456", "457", "459", "602", "607", "620", "626", "654", "655", "670", "679", "682", "684", "686", "697", "747"]}, {"nombre": "CUBRE BINS", "medidas": "MÁXIMO: A 110x40, B 90x40 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/W8ARN44ydqCf-Cubre-Bins-FotoMontaje.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/UtNLyAq1TuWf-Cubre-Bins-KV.png", "locales": ["32", "33", "35", "36", "38", "42", "44", "45", "46", "49", "58", "72", "73", "75", "76", "78", "81", "82", "83", "84", "88", "89", "91", "94", "96", "97", "99", "120", "121", "125", "126", "127", "244", "279", "425", "426", "608", "618", "626", "635", "654", "684", "697", "736", "739", "798", "910", "929", "985", "988"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/57Oq7OTC7TI8-MiniCabecera-ABD.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/xjm1iPLHefvT-MiniCabecera-ABD.png", "locales": ["39", "48", "55", "57", "71", "79", "83", "85", "88", "89", "92", "95", "97", "98", "120", "126", "127", "182", "426", "456", "457", "459", "602", "607", "620", "626", "654", "655", "670", "679", "682", "684", "686", "697", "747"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/fg5dfaIn35ti-MiniCabecera-ABD.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/IjCcVyjckDnB-MiniCabecera-ABD.png", "locales": ["2", "4", "8", "15", "43", "51", "56", "60", "61", "65", "74", "140", "142", "248", "276", "463", "523", "524", "644", "645", "652", "653", "656", "657", "668"]}, {"nombre": "GLORIFICADOR", "medidas": "MÁXIMO: 25x35 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/KcgRFDLanExp-Bandeja-Alzadora.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/bHyWBrvPZwF4-Bandeja-Alzadora.png", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "SEPARADOR XL", "medidas": "MÁXIMO: 15x40 cm.", "piezas": 2, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/hUyTRhSZb0vy-Stopper-XL-Fotomontaje.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/3f9onK0Bol66-Stopper-XL-KV.png", "locales": ["2", "15", "16", "40", "43", "51", "56", "74", "139", "140", "146", "149", "166", "180", "276", "525", "600", "610", "611", "621", "627", "640", "644", "650", "658", "674", "680", "695", "696", "764"]}, {"nombre": "SEPARADOR XL", "medidas": "MÁXIMO: 15x40 cm.", "piezas": 2, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/kETLbfUFC6Ja-Stopper-XL-Fotomontaje.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/1YGYU447lbnH-Stopper-XL-KV.png", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "739", "747", "748", "798", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/Wx87pU0tJ8U5-Render-Arco-ingreso-sala-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/UlBQRYPrdAxo-KV-Arco-ingreso-sala-QR.png", "locales": ["32", "35", "41", "55", "57", "73", "76", "78", "88", "92", "94", "95", "97", "99"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/su5sQrdUl8zd-Render-Arco-ingreso-sala-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/xJiwLuCrG20t-KV-Arco-ingreso-sala-QR.png", "locales": ["32", "35", "41", "55", "57", "73", "75", "76", "78", "88", "92", "94", "95", "97", "99"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/sJSGsyXnPFMs-KV-Arco-ingreso-sala-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/dpcafTvLGCgz-Render-Arco-ingreso-sala-QR.png", "locales": ["32", "41", "57", "92", "95"]}, {"nombre": "MINI CABECERA", "medidas": "MÁXIMO: 40x20x145 cm.", "piezas": 1, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/OKVUrWHxk7Hb-Fotomontaje-Arco-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/bPFfCL5pmzTH-KV-Arco-QR.png", "locales": ["58", "83", "89", "91", "98"]}, {"nombre": "SEPARADOR XL", "medidas": "MÁXIMO: 15x40 cm.", "piezas": 1, "categoria": "DRESSING", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/UQCtWplo8czT-Captura-de-pantalla-2025-12-11-120257.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/TEk7TI0GI8iF-Captura-de-pantalla-2025-12-11-120423.png", "locales": ["3", "32", "33", "35", "36", "37", "38", "39", "41", "42", "44", "45", "46", "48", "49", "53", "54", "55", "57", "58", "62", "66", "71", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99", "120", "121", "122", "125", "126", "127", "137", "143", "182", "279", "425", "426", "456", "457", "459", "518", "602", "606", "607", "608", "616", "618", "620", "626", "628", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "693", "697", "736", "747", "748", "798", "929", "945", "952", "978", "983", "985", "988", "993"]}, {"nombre": "CUBRE PALLETS", "medidas": "MÁXIMO: 470x80 cm.", "piezas": 1, "categoria": "DRESSING", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/RJIBFPuiGCoF-Captura-de-pantalla-2025-12-11-105124.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/OS4V85EHmu5v-Captura-de-pantalla-2025-12-11-105154.png", "locales": ["3", "32", "33", "35", "37", "38", "39", "41", "44", "45", "46", "48", "49", "54", "55", "57", "58", "62", "72", "73", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "88", "89", "91", "92", "94", "95", "96", "97", "98", "99", "122", "125", "126", "127", "137", "143", "182", "244", "279", "425", "456", "457", "459", "518", "602", "606", "607", "608", "616", "620", "626", "631", "632", "635", "654", "655", "670", "671", "679", "682", "684", "686", "697", "736", "739", "748", "798", "929", "952", "978", "983", "985", "988", "993"]}, {"nombre": "ISLA", "medidas": "MÁXIMO: 100 x 120 x 150 cm.", "piezas": 1, "categoria": "PASTAS", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/l0PlK8LhuFI6-Isla-Peri-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/oR9CjmhoDjbZ-Isla-Peri-QR.png", "locales": ["32", "91", "95"]}, {"nombre": "CUBRE PALLETS", "medidas": "MÁXIMO: 470x80 cm.", "piezas": 2, "categoria": "DESODORANTE-ANTITRANSPIRANTE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/E1uS0KCU8JrK-ABD-FINAL-QR.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/0PJFz9PkYPRd-ABD-FINAL-QR.png", "locales": ["32", "33", "35", "36", "38", "42", "44", "45", "46", "49", "58", "72", "73", "76", "78", "82", "83", "84", "88", "89", "91", "94", "96", "97", "99", "120", "121", "125", "127", "279", "608", "626", "635", "654", "684", "697", "739", "929", "988"]}, {"nombre": "LATERAL CABECERA", "medidas": "MÁXIMO: 45x160 cm, 40x170 cm.", "piezas": 1, "categoria": "SHAMPOO", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/OFvc8TolagKK-cabeceras-foto.png", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/FRKVjlEkQMjS-cabeceras-KV.png", "locales": ["57"]}];
+const localesPorElemento = {};
+
+const cardsRoot   = document.getElementById('cardsRoot');
+const modal       = document.getElementById('modalLocales');
+const lista       = document.getElementById('listaLocales');
+const inputBuscar = document.getElementById('inputBuscar');
+const btnClose    = document.getElementById('btnCloseModal');
+const selectLocal = document.getElementById('filtroGlobal');
+
+document.getElementById('providerName').textContent     = "Proveedor: " + (__PROVIDER__.proveedor || "Proveedor");
+document.getElementById('providerVigencia').textContent = "Vigencia: " + (__PROVIDER__.vigencia || "Vigencia");
+
+/* PREVIEW */
+function esImagen(url){ return url && /\.(jpg|jpeg|png|webp|gif)$/i.test(url); }
+function previewImg(url){ return esImagen(url) ? `<img src="${url}" class="preview-img"/>` : ""; }
+
+function linkBtn(url,label){
+  if(url && url.startsWith("http")){
+    return `<a href="${url}" target="_blank" class="btn">${label}</a>`;
+  }
+  return `<span class="btn disabled">No Adjunta</span>`;
+}
+
+/* MODAL */
+function openLocales(arr){
+  lista.innerHTML='';
+  (arr || []).forEach(l=>{
+    const li=document.createElement('li');
+    li.textContent='Local '+l;
+    lista.appendChild(li);
+  });
+  inputBuscar.value='';
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  modal.style.display='none';
+  document.body.style.overflow='';
+}
+
+function filterLocales(val){
+  val=val.toLowerCase();
+  document.querySelectorAll('#listaLocales li').forEach(li=>{
+    li.style.display=li.textContent.toLowerCase().includes(val) ? '' : 'none';
+  });
+}
+
+inputBuscar.addEventListener('keyup', e => filterLocales(e.target.value));
+btnClose.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+});
+
+/* SELECT LOCALES */
+function construirSelectLocales(){
+  const setLocales = new Set();
+
+  elementos.forEach(el=>{
+    (el.locales || []).forEach(l=>{
+      if(l !== null && l !== undefined && l !== "")
+        setLocales.add(String(l));
+    });
+  });
+
+  selectLocal.innerHTML = '<option value="">Todos los locales</option>';
+
+  [...setLocales]
+    .sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}))
+    .forEach(l=>{
+      const op=document.createElement('option');
+      op.value=l;
+      op.textContent='Local ' + l;
+      selectLocal.appendChild(op);
+    });
+}
+
+
+/* RENDER */
+function renderCards(){
+  const filtro = selectLocal.value;
+  cardsRoot.innerHTML='';
+
+  elementos.forEach(el=>{
+    const locales = el.locales || [];
+    if (filtro && !locales.map(l => String(l).trim()).includes(String(filtro).trim())) return;
+
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="grid-main">
+        <div class="cell"><div class="label">Elemento</div><div class="value">${el.nombre}</div></div>
+        <div class="cell"><div class="label">Medidas</div><div class="value">${el.medidas}</div></div>
+        <div class="cell"><div class="label">Piezas</div><div class="value">${el.piezas ? el.piezas + " por local" : "-"}</div></div>
+        <div class="cell"><div class="label">Zona</div><div class="value">${el.categoria || "No Adjunta"}</div></div>
+
+        <div class="cell">
+          ${previewImg(el.fotomontaje)}
+          ${linkBtn(el.fotomontaje,"Fotomontaje")}
+        </div>
+        <div class="cell">
+          ${previewImg(el.keyvisual)}
+          ${linkBtn(el.keyvisual,"Key Visual")}
+        </div>
+      </div>
+      <div class="locales-row">
+        <div class="locales-btn">Ver locales (${locales.length})</div>
+      </div>
+    `;
+
+    card.querySelector('.locales-btn').onclick=()=>openLocales(locales);
+    cardsRoot.appendChild(card);
+  });
+}
+
+/* SCROLL INDICATOR LOGIC */
+const scrollIndicator = document.getElementById('scrollIndicator');
+
+function checkScroll() {
+  const scrollTop = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const docHeight = document.body.scrollHeight;
+
+  if (scrollTop + windowHeight >= docHeight - 10) {
+    scrollIndicator.style.display = 'none';
+  } else {
+    scrollIndicator.style.display = 'flex';
+  }
+}
+
+scrollIndicator.addEventListener('click', () => {
+  window.scrollBy({
+    top: window.innerHeight * 0.9,
+    behavior: 'smooth'
+  });
+});
+
+
+/* INIT */
+window.addEventListener('scroll', checkScroll);
+window.addEventListener('resize', checkScroll);
+checkScroll();
+construirSelectLocales();
+new Choices('#filtroGlobal', {
+  searchEnabled: true,
+  itemSelectText: '',
+  shouldSort: false,
+  searchPlaceholderValue: 'Buscar local...',
+});
+selectLocal.addEventListener('change', renderCards);
+renderCards();
+</script>
+
+</body>
+</html>
