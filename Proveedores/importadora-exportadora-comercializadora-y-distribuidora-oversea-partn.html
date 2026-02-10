@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Walmart Connect – Consolidados 2026</title>
+<title>Walmart Connect · Sin Consolidado Vigente</title>
 <link rel="icon" type="image/png" href="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png">
 
 <style>
@@ -14,413 +14,111 @@
   --border: #e5e7eb;
   --text: #1f2937;
   --muted: #6b7280;
-  --btn: #2563eb;
-  --btn-disabled: #9ca3af;
-  --locales-bg: #eef2ff;
-}
-* { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-body { margin: 0; background: var(--bg); color: var(--text); }
-header { background: var(--primary); color: white; padding: 16px; text-align: center; font-weight: 600; }
-
-.wrapper { max-width: 760px; margin: 20px auto; padding: 0 14px; }
-
-.provider-bar {
-  background: white; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
-  display: flex; flex-direction: column; gap: 6px;
-}
-.provider-name { font-weight: 700; }
-.provider-date { font-size: 12px; color: var(--muted); }
-
-.filtro-bar {
-  background: white;
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 14px rgba(0,0,0,.12);
 }
 
-.filtro-bar select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.header{
+  background:var(--primary);
+  color:white;
+  padding:14px 16px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+
+.header img{
+  height:26px;
+  object-fit:contain;
+}
+
+/* WRAPPER IGUAL AL OTRO */
+
+.wrapper {
+  max-width: 720px;
+  margin: 90px auto 0 auto;
+  padding: 0 16px;
+}
+
+/* CARD */
 .card {
   background: var(--panel);
-  border-radius: 18px;
-  box-shadow: 0 10px 26px rgba(0,0,0,.18);
-  overflow: hidden;
-  margin-bottom: 18px;
-}
-
-.grid-main { display: grid; grid-template-columns: 1fr 1fr; }
-
-.cell {
-  min-width: 0;
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-
-.grid-main > .cell:nth-child(odd) { border-right: 1px solid var(--border); }
-.grid-main > .cell:nth-last-child(-n + 2) { border-bottom: none; }
-
-.label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.value { font-weight: 600; }
-
-.preview-img {
-  width: 100%;
-  max-height: 90px;
-  object-fit: contain;
-  margin-bottom: 6px;
-  border-radius: 8px;
-}
-
-.btn {
-  display: inline-block;
-  width: 100%;
-  padding: 8px;
+  border-radius: 20px;
+  padding: 26px 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
   text-align: center;
-  background: var(--btn);
-  color: white;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 12px;
-  text-decoration: none;
 }
 
-.btn.disabled {
-  background: var(--btn-disabled);
-  cursor: not-allowed;
-}
-
-.locales-row {
-  border-top: 1px solid var(--border);
-  padding: 14px;
-}
-
-.locales-btn {
-  width: 100%;
-  padding: 10px;
-  background: var(--locales-bg);
-  color: var(--primary);
-  border-radius: 12px;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-}
-
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  z-index: 1000;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.modal-content {
-  background: white;
-  width: 100%;
-  max-height: 85vh;
-  border-radius: 18px 18px 0 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  padding: 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-}
-
-.modal-body {
-  padding: 14px;
-  overflow-y: auto;
-}
-
-.modal-body input {
-  width: 100%;
-  padding: 10px;
+.icon {
+  font-size: 40px;
   margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
 }
 
-.locales-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--primary);
 }
 
-.locales-list li {
-  padding: 8px 4px;
-  border-bottom: 1px solid var(--border);
+.text {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
-.header-bar {
-  background: var(--primary);
-  color: white;
-  padding: 12px 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.footer-text {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
 }
 
-.logo-header {
-  height: 26px;
-  object-fit: contain;
-}
-
-/* SCROLL INDICATOR */
-.scroll-indicator {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,.25);
-  z-index: 2000;
-  opacity: .85;
-  transition: opacity .2s ease, transform .2s ease;
-  animation: bounce 1.6s infinite;
-}
-
-.scroll-indicator:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-@keyframes bounce {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0); }
-}
-
-.close { font-size: 22px; cursor: pointer; }
-
-@media (min-width: 769px) {
-  .modal { align-items: center; }
-  .modal-content { width: 520px; border-radius: 16px; }
+@media (min-width: 768px) {
+  .wrapper {
+    margin-top: 40px;
+  }
 }
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 
 <body>
 
-<header class="header-bar">
-  <img src="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png" class="logo-header" alt="Connect">
-  <span>Walmart Connect · Consolidado</span>
-</header>
-
-
+<div class="header">
+  <img src="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png" alt="Walmart Connect">
+  <span>Walmart Connect · Consolidados</span>
+</div>
 
 <div class="wrapper">
 
-  <div class="provider-bar">
-    <div class="provider-name" id="providerName">Proveedor</div>
-    <div class="provider-date" id="providerVigencia">Vigencia</div>
-  </div>
-
-  <div class="filtro-bar">
-    <select id="filtroGlobal"></select>
-  </div>
-
-  <div id="cardsRoot"></div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modalLocales">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span>Locales asociados</span>
-      <span class="close" id="btnCloseModal">×</span>
-    </div>
-    <div class="modal-body">
-      <input type="text" id="inputBuscar" placeholder="Buscar local..." />
-      <ul class="locales-list" id="listaLocales"></ul>
+  <div class="card">
+    <div class="icon">⚠️</div>
+    <div class="title">Hola estimado proveedor</div>
+    <div class="text">
+      Actualmente <strong>no tienes elementos aprobados</strong> para esta vigencia.
+      <br><br>
+      Para más información por favor contacta al equipo de
+      <strong>Operaciones de Walmart Connect</strong>
+      o a tu <strong>Client Partner (CP)</strong>.
     </div>
   </div>
+
+  <div class="footer-text">
+    Walmart Connect · Plataforma de Consolidación
+  </div>
+
 </div>
-
-<div id="scrollIndicator" class="scroll-indicator">↓</div>
-
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
-<script>
-const __PROVIDER__       = {"proveedor": "Importadora exportadora comercializadora y distribuidora oversea partn", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)"};
-const elementos          = [{"nombre": "EXHIBIDOR LATERAL", "medidas": "MÁXIMO: 30 x 15 x 40 cms.", "piezas": 2, "categoria": "ORAL - ENJUAGUE", "vigencia": "Etapa 1 (08/01/26 → 10/02/26)", "fotomontaje": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/kE3WqkL6Uq5e-PHOTO-2025-11-19-13-27-15.jpg", "keyvisual": "https://walmartconnect.cl/wp-content/uploads/forminator/818_69591769e92703498e05efc8dbca5e38/uploads/tWo6VOcpo89S-PHOTO-2025-11-19-13-27-15.jpg", "locales": ["32", "33", "35", "36", "39", "42", "45", "46", "48", "49", "53", "54", "62", "66", "73", "75", "76", "77", "78", "79", "82", "83", "84", "85", "86", "87", "94", "96", "98", "99", "126", "127", "137", "244", "279", "456", "457", "606", "608", "616", "618", "620", "631", "632", "635", "670", "671", "679", "682", "693", "736", "748", "798", "929", "945", "952", "978", "983", "985", "988"]}];
-const localesPorElemento = {};
-
-const cardsRoot   = document.getElementById('cardsRoot');
-const modal       = document.getElementById('modalLocales');
-const lista       = document.getElementById('listaLocales');
-const inputBuscar = document.getElementById('inputBuscar');
-const btnClose    = document.getElementById('btnCloseModal');
-const selectLocal = document.getElementById('filtroGlobal');
-
-document.getElementById('providerName').textContent     = "Proveedor: " + (__PROVIDER__.proveedor || "Proveedor");
-document.getElementById('providerVigencia').textContent = "Vigencia: " + (__PROVIDER__.vigencia || "Vigencia");
-
-/* PREVIEW */
-function esImagen(url){ return url && /\.(jpg|jpeg|png|webp|gif)$/i.test(url); }
-function previewImg(url){ return esImagen(url) ? `<img src="${url}" class="preview-img"/>` : ""; }
-
-function linkBtn(url,label){
-  if(url && url.startsWith("http")){
-    return `<a href="${url}" target="_blank" class="btn">${label}</a>`;
-  }
-  return `<span class="btn disabled">No Adjunta</span>`;
-}
-
-/* MODAL */
-function openLocales(arr){
-  lista.innerHTML='';
-  (arr || []).forEach(l=>{
-    const li=document.createElement('li');
-    li.textContent='Local '+l;
-    lista.appendChild(li);
-  });
-  inputBuscar.value='';
-  modal.style.display='flex';
-  document.body.style.overflow='hidden';
-}
-
-function closeModal(){
-  modal.style.display='none';
-  document.body.style.overflow='';
-}
-
-function filterLocales(val){
-  val=val.toLowerCase();
-  document.querySelectorAll('#listaLocales li').forEach(li=>{
-    li.style.display=li.textContent.toLowerCase().includes(val) ? '' : 'none';
-  });
-}
-
-inputBuscar.addEventListener('keyup', e => filterLocales(e.target.value));
-btnClose.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
-});
-
-/* SELECT LOCALES */
-function construirSelectLocales(){
-  const setLocales = new Set();
-
-  elementos.forEach(el=>{
-    (el.locales || []).forEach(l=>{
-      if(l !== null && l !== undefined && l !== "")
-        setLocales.add(String(l));
-    });
-  });
-
-  selectLocal.innerHTML = '<option value="">Todos los locales</option>';
-
-  [...setLocales]
-    .sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}))
-    .forEach(l=>{
-      const op=document.createElement('option');
-      op.value=l;
-      op.textContent='Local ' + l;
-      selectLocal.appendChild(op);
-    });
-}
-
-
-/* RENDER */
-function renderCards(){
-  const filtro = selectLocal.value;
-  cardsRoot.innerHTML='';
-
-  elementos.forEach(el=>{
-    const locales = el.locales || [];
-    if (filtro && !locales.map(l => String(l).trim()).includes(String(filtro).trim())) return;
-
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`
-      <div class="grid-main">
-        <div class="cell"><div class="label">Elemento</div><div class="value">${el.nombre}</div></div>
-        <div class="cell"><div class="label">Medidas</div><div class="value">${el.medidas}</div></div>
-        <div class="cell"><div class="label">Piezas</div><div class="value">${el.piezas ? el.piezas + " por local" : "-"}</div></div>
-        <div class="cell"><div class="label">Zona</div><div class="value">${el.categoria || "No Adjunta"}</div></div>
-
-        <div class="cell">
-          ${previewImg(el.fotomontaje)}
-          ${linkBtn(el.fotomontaje,"Fotomontaje")}
-        </div>
-        <div class="cell">
-          ${previewImg(el.keyvisual)}
-          ${linkBtn(el.keyvisual,"Key Visual")}
-        </div>
-      </div>
-      <div class="locales-row">
-        <div class="locales-btn">Ver locales (${locales.length})</div>
-      </div>
-    `;
-
-    card.querySelector('.locales-btn').onclick=()=>openLocales(locales);
-    cardsRoot.appendChild(card);
-  });
-}
-
-/* SCROLL INDICATOR LOGIC */
-const scrollIndicator = document.getElementById('scrollIndicator');
-
-function checkScroll() {
-  const scrollTop = window.scrollY;
-  const windowHeight = window.innerHeight;
-  const docHeight = document.body.scrollHeight;
-
-  if (scrollTop + windowHeight >= docHeight - 10) {
-    scrollIndicator.style.display = 'none';
-  } else {
-    scrollIndicator.style.display = 'flex';
-  }
-}
-
-scrollIndicator.addEventListener('click', () => {
-  window.scrollBy({
-    top: window.innerHeight * 0.9,
-    behavior: 'smooth'
-  });
-});
-
-
-/* INIT */
-window.addEventListener('scroll', checkScroll);
-window.addEventListener('resize', checkScroll);
-checkScroll();
-construirSelectLocales();
-new Choices('#filtroGlobal', {
-  searchEnabled: true,
-  itemSelectText: '',
-  shouldSort: false,
-  searchPlaceholderValue: 'Buscar local...',
-});
-selectLocal.addEventListener('change', renderCards);
-renderCards();
-</script>
 
 </body>
 </html>
