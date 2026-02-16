@@ -240,7 +240,7 @@ header { background: var(--primary); color: white; padding: 16px; text-align: ce
   </div>
 
   <div class="filtro-bar">
-    <select id="filtroGlobal"></select>
+    <select id="filtroGlobal" multiple></select>
   </div>
 
   <div id="cardsRoot"></div>
@@ -349,13 +349,16 @@ function construirSelectLocales(){
 
 /* RENDER */
 function renderCards(){
-  const filtro = selectLocal.value;
+  const filtros = Array.from(selectLocal.selectedOptions).map(o => o.value);
   cardsRoot.innerHTML='';
 
   elementos.forEach(el=>{
     const locales = el.locales || [];
-    if (filtro && !locales.map(l => String(l).trim()).includes(String(filtro).trim())) return;
-
+    if (filtros.length > 0) {
+  const localesStr = locales.map(l => String(l).trim());
+  const match = filtros.some(f => localesStr.includes(String(f).trim()));
+  if (!match) return;
+}
     const card=document.createElement('div');
     card.className='card';
     card.innerHTML=`
@@ -412,7 +415,8 @@ window.addEventListener('scroll', checkScroll);
 window.addEventListener('resize', checkScroll);
 checkScroll();
 construirSelectLocales();
-new Choices('#filtroGlobal', {
+const choiceLocal = new Choices('#filtroGlobal', {
+  removeItemButton: true,   // ← para poder quitar selecciones
   searchEnabled: true,
   itemSelectText: '',
   shouldSort: false,
