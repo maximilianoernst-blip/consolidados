@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>LIBESA</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f3f4f6;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.card{
+background:white;
+max-width:520px;
+width:100%;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.15);
+text-align:center;
+}
+
+.logo{
+width:42px;
+margin-bottom:10px;
+}
+
+h1{
+font-size:23px;
+color:#0b2a6f;
+margin-bottom:12px;
+}
+
+p{
+color:#666;
+line-height:1.6;
+margin-bottom:22px;
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ccc;
+font-size:15px;
+margin-bottom:18px;
+}
+
+button,
+a.btn{
+display:block;
+width:100%;
+padding:15px;
+border-radius:14px;
+border:none;
+background:#1565d8;
+color:white;
+font-weight:bold;
+font-size:15px;
+text-decoration:none;
+cursor:pointer;
+}
+
+button:hover,
+a.btn:hover{
+background:#0b2a6f;
+}
+
+#error{
+margin-top:12px;
+color:red;
+display:none;
+}
+
+#contenido{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div id="login">
+
+<img class="logo"
+src="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png">
+
+<h1>Walmart Connect</h1>
+
+<p>Ingrese la contraseña para acceder al consolidado.</p>
+
+<input
+id="pass"
+type="password"
+placeholder="Contraseña">
+
+<button onclick="login()">
+Ingresar
+</button>
+
+<div id="error">
+Contraseña incorrecta
+</div>
+
+</div>
+
+
+<div id="contenido">
+
+<img class="logo"
+src="https://walmartconnect.cl/wp-content/uploads/2023/01/WMG-favicon-32x32-1.png">
+
+<h1>LIBESA</h1>
+
+<p>
+
+Tu archivo consolidado está disponible.
+
+</p>
+
+<a
+class="btn"
+href="https://maximilianoernst-blip.github.io/consolidados/Proveedores/libesa.html">
+
+Ver Consolidado
+
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+
+function login(){
+
+let p=document.getElementById("pass").value;
+
+if(p=="wmqr01"){
+
+
+document.getElementById("login").style.display="none";
+document.getElementById("contenido").style.display="block";
+
+}
+else{
+document.getElementById("error").style.display="block";
+}
+
+
+
+}
+
+// Si vuelve desde atrás/adelante o se vuelve a mostrar la página
+window.addEventListener("pageshow", function(event){
+
+    if(event.persisted){
+
+        document.getElementById("pass").value = "";
+        document.getElementById("error").style.display = "none";
+
+        document.getElementById("login").style.display = "block";
+        document.getElementById("contenido").style.display = "none";
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
