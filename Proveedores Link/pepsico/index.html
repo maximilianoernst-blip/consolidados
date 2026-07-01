@@ -152,12 +152,6 @@ Ver Consolidado
 
 <script>
 
-if(sessionStorage.getItem("wmconnect")=="ok"){
-
-document.getElementById("login").style.display="none";
-document.getElementById("contenido").style.display="block";
-
-}
 
 function login(){
 
@@ -165,7 +159,6 @@ let p=document.getElementById("pass").value;
 
 if(p=="wmqr01"){
 
-sessionStorage.setItem("wmconnect","ok");
 
 document.getElementById("login").style.display="none";
 document.getElementById("contenido").style.display="block";
